@@ -3,75 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OTTIBONYNYO COMMUNITY</title>
+    <title>OTTIBONYNYO -  COMMUNITY</title>
     <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com">
     <style>
-        :root { --primary: #00d2ff; --bg: #0f0c29; }
-        body { background: var(--bg); color: white; font-family: 'Poppins', sans-serif; margin: 0; }
-        header { text-align: center; padding: 50px 20px; background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com'); background-size: cover; }
-        h1 { font-family: 'Orbitron'; font-size: 3rem; color: var(--primary); margin: 0; }
-        .container { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
-        .card { background: rgba(255,255,255,0.05); border-radius: 15px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); transition: 0.3s; }
-        .card:hover { transform: translateY(-5px); border-color: var(--primary); }
-        .preview-box { width: 100%; height: 200px; background: #000; overflow: hidden; }
-        .preview-box img, .preview-box iframe { width: 100%; height: 100%; object-fit: cover; border: none; }
-        .info { padding: 20px; }
-        .platform-tag { background: var(--primary); color: black; padding: 3px 10px; border-radius: 5px; font-size: 12px; font-weight: bold; }
-        .btn-dl { display: block; background: var(--primary); color: black; text-align: center; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: bold; margin-top: 15px; }
+        :root { --accent: #00d2ff; --bg: #0b0e14; --card: #161b22; }
+        body { background: var(--bg); color: #fff; font-family: 'Poppins', sans-serif; margin: 0; overflow-x: hidden; }
+        
+        header { 
+            height: 60vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            background: linear-gradient(rgba(11,14,20,0.8), rgba(11,14,20,0.9)), url('https://images.unsplash.com');
+            background-size: cover; border-bottom: 2px solid var(--accent); text-align: center;
+        }
+        h1 { font-family: 'Orbitron'; font-size: clamp(2rem, 8vw, 4rem); color: var(--accent); text-shadow: 0 0 20px rgba(0,210,255,0.5); margin: 0; }
+        
+        .social-container { display: flex; gap: 15px; margin-top: 25px; }
+        .btn-social { padding: 10px 20px; border-radius: 50px; text-decoration: none; font-weight: 600; transition: 0.3s; border: 1px solid rgba(255,255,255,0.2); color: #fff; font-size: 14px; }
+        .btn-yt:hover { background: #ff0000; box-shadow: 0 0 20px #ff0000; border-color: #ff0000; }
+        .btn-dc:hover { background: #7289da; box-shadow: 0 0 20px #7289da; border-color: #7289da; }
+
+        .container { max-width: 1200px; margin: -80px auto 50px; padding: 0 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; }
+        
+        .card { background: var(--card); border-radius: 20px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); transition: 0.4s; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .card:hover { transform: translateY(-10px); border-color: var(--accent); }
+        
+        .preview { width: 100%; height: 180px; background: #000; }
+        .preview iframe, .preview img { width: 100%; height: 100%; object-fit: cover; border: none; }
+        
+        .content { padding: 20px; }
+        .platform { font-size: 10px; background: var(--accent); color: #000; padding: 3px 10px; border-radius: 50px; font-weight: bold; }
+        .btn-dl { display: block; width: 100%; padding: 12px; background: transparent; color: var(--accent); border: 2px solid var(--accent); text-align: center; text-decoration: none; font-weight: bold; border-radius: 12px; margin-top: 15px; transition: 0.3s; box-sizing: border-box; }
+        .btn-dl:hover { background: var(--accent); color: #000; }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>MOD CENTER</h1>
-    <p>Download Mod Gratis untuk PC & Android</p>
-    <div style="margin-top: 20px;">
-        <a href="URL_YOUTUBE" style="color:red; margin-right: 15px;">YouTube</a>
-        <a href="URL_DISCORD" style="color:#7289da;">Discord</a>
+    <h1>OTTIBONYNYO - MOD</h1>
+    <p style="color: #ccc;">Tempat Download Mod Terbaik & Terupdate</p>
+    <div class="social-container">
+        <a href="https://youtube.com" class="btn-social btn-yt"><i class="fab fa-youtube"></i> YouTube</a>
+        <a href="https://discord.gg" class="btn-social btn-dc"><i class="fab fa-discord"></i> Discord</a>
     </div>
 </header>
 
 <div class="container">
-    <div class="grid" id="modGrid">Loading mod...</div>
+    <div class="grid" id="modGrid">Memuat mod terbaru... 🛸</div>
 </div>
 
 <script>
-    // MASUKKAN LINK CSV GOOGLE SHEETS KAMU DI SINI
     const csvURL = 'https://docs.google.com';
 
     async function loadMods() {
         try {
-            const resp = await fetch(csvURL);
-            const data = await resp.text();
-            const rows = data.split('\n').slice(1);
+            const r = await fetch(csvURL);
+            const d = await r.text();
+            const rows = d.split('\n').slice(1);
             const grid = document.getElementById('modGrid');
             grid.innerHTML = '';
 
             rows.forEach(row => {
-                const col = row.split(',');
-                if(col.length < 5) return;
+                const c = row.split(',');
+                if(c.length < 5) return;
 
-                let previewHTML = '';
-                if(col[3].includes('youtube') || col[3].includes('youtu.be')) {
-                    let id = col[3].includes('v=') ? col[3].split('v=')[1].split('&')[0] : col[3].split('/').pop();
-                    previewHTML = `<iframe src="https://www.youtube.com{id}"></iframe>`;
+                let media = '';
+                if(c[3].includes('youtube') || c[3].includes('youtu.be')) {
+                    let vid = c[3].split('v=')[1] || c[3].split('/').pop();
+                    media = `<iframe src="https://www.youtube.com{vid}"></iframe>`;
                 } else {
-                    previewHTML = `<img src="${col[3]}" alt="Preview">`;
+                    media = `<img src="${c[3]}" onerror="this.src='https://placehold.co'">`;
                 }
 
                 grid.innerHTML += `
-                    <div class="card">
-                        <div class="preview-box">${previewHTML}</div>
-                        <div class="info">
-                            <span class="platform-tag">${col[2]}</span>
-                            <h3 style="margin: 10px 0 5px;">${col[0]}</h3>
-                            <p style="font-size: 14px; color: #ccc;">${col[1]}</p>
-                            <a href="${col[4]}" class="btn-dl">DOWNLOAD</a>
-                        </div>
-                    </div>`;
+                <div class="card">
+                    <div class="preview">${media}</div>
+                    <div class="content">
+                        <span class="platform">${c[2]}</span>
+                        <h3 style="margin:10px 0;">${c[0]}</h3>
+                        <p style="font-size:13px; color:#888;">${c[1]}</p>
+                        <a href="${c[4]}" class="btn-dl">DOWNLOAD NOW</a>
+                    </div>
+                </div>`;
             });
-        } catch(e) { document.getElementById('modGrid').innerText = 'Gagal memuat data.'; }
+        } catch(e) { grid.innerText = "Error memuat database."; }
     }
     loadMods();
 </script>
