@@ -106,37 +106,33 @@
                 const col = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                 if(col.length < 5) return;
 
-                const nama = col[0].replace(/"/g, "").trim();
-                const desc = col[1].replace(/"/g, "").trim();
-                const plat = col[2].replace(/"/g, "").trim();
-                const prev = col[3].replace(/"/g, "").trim();
-                const link = col[4].replace(/"/g, "").trim();
+                const nama = col[0].replace(/"/g, "");
+                const desc = col[1].replace(/"/g, "");
+                const plat = col[2].replace(/"/g, "");
+                const prev = col[3].trim().replace(/"/g, "");
+                const link = col[4].trim().replace(/"/g, "");
 
                 let media = '';
-                // PERBAIKAN: Logika ekstraksi Video ID YouTube yang lebih kuat
-                if(prev.includes('youtube.com') || prev.includes('youtu.be')) {
+                if (prev.includes('youtube.com') || prev.includes('youtu.be')) {
                     let videoId = "";
-                    if(prev.includes('v=')) {
+                    if (prev.includes('v=')) {
                         videoId = prev.split('v=')[1].split('&')[0];
-                    } else if(prev.includes('youtu.be/')) {
+                    } else {
                         videoId = prev.split('/').pop().split('?')[0];
-                    } else if(prev.includes('embed/')) {
-                        videoId = prev.split('embed/')[1].split('?')[0];
                     }
-                    
-                    // PERBAIKAN UTAMA: Format embed yang benar dengan backtick (`) dan ${}
                     media = `<iframe src="https://www.youtube.com{videoId}" allowfullscreen></iframe>`;
                 } else {
                     media = `<img src="${prev}" onerror="this.src='https://placehold.co'">`;
                 }
 
+                // PERHATIKAN: Bagian ini harus dibungkus dengan backtick ( ` )
                 grid.innerHTML += `
                 <div class="card">
                     <div class="preview">${media}</div>
                     <div class="content">
                         <span class="platform">${plat}</span>
-                        <h3 style="margin:10px 0 5px; font-size:18px;">${nama}</h3>
-                        <p style="font-size:13px; color:#aaa; margin-bottom:15px; height:40px; overflow:hidden;">${desc}</p>
+                        <h3 style="margin:10px 0 5px;">${nama}</h3>
+                        <p style="font-size:13px; color:#aaa; height:40px; overflow:hidden;">${desc}</p>
                         <a href="${link}" class="btn-dl" target="_blank">DOWNLOAD</a>
                     </div>
                 </div>`;
@@ -148,6 +144,7 @@
     }
     loadMods();
 </script>
+
 </body>
 </html>
 
