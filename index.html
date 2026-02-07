@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OTC MOD HUB</title>
-    <!-- PERBAIKAN: Link font & ikon lengkap agar muncul & tidak error CORB -->
+    <!-- PERBAIKAN: Link lengkap agar tidak diblokir CORB -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com">
     <style>
@@ -43,7 +43,7 @@
 </div>
 
 <script>
-    const csvURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQDRJ17ZZZahiwECXbmCf5xG6VgsbUZrIoI7gsRuFijxwe_d0iaytC3dT57O9qkR3lLP7xgmJfMA8S9/pub?gid=0&single=true&output=csv';
+    const csvURL = 'https://docs.google.comhttps://docs.google.com/spreadsheets/d/e/2PACX-1vQDRJ17ZZZahiwECXbmCf5xG6VgsbUZrIoI7gsRuFijxwe_d0iaytC3dT57O9qkR3lLP7xgmJfMA8S9/pub?gid=0&single=true&output=csv';
 
     async function loadMods() {
         const grid = document.getElementById('modGrid');
@@ -64,22 +64,16 @@
                 const link = col[4].replace(/"/g, "").trim();
 
                 let media = '';
-                if (prev.includes('youtube.com') || prev.includes('youtu.be')) {
+                // PERBAIKAN: Logika Video ID YouTube & Format Embed yang Benar
+                if(prev.includes('youtube.com') || prev.includes('youtu.be')) {
                     let videoId = "";
-                    try {
-                        if (prev.includes('v=')) {
-                            videoId = prev.split('v=')[1].split('&')[0];
-                        } else {
-                            videoId = prev.split('/').pop().split('?')[0];
-                        }
-                    } catch (err) { videoId = ""; }
-                    
-                    // PERBAIKAN: Format /embed/ dan variabel ${videoId} yang benar
-                    if (videoId) {
-                        media = `<iframe src="https://www.youtube.com{videoId}" allowfullscreen></iframe>`;
+                    if(prev.includes('v=')) {
+                        videoId = prev.split('v=')[1].split('&')[0];
                     } else {
-                        media = `<img src="https://placehold.co">`;
+                        videoId = prev.split('/').pop().split('?')[0];
                     }
+                    // MENGGUNAKAN backtick (`) dan ${videoId} agar variabel terbaca
+                    media = `<iframe src="https://www.youtube.com{videoId}" allowfullscreen></iframe>`;
                 } else {
                     media = `<img src="${prev}" onerror="this.src='https://placehold.co'">`;
                 }
@@ -97,7 +91,6 @@
             });
         } catch(e) {
             grid.innerHTML = "Gagal memuat data.";
-            console.error(e);
         }
     }
     loadMods();
