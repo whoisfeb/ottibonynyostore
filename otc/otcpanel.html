@@ -1,51 +1,54 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <link href="https://fonts.googleapis.com" rel="stylesheet">
   <style>
-    body { font-family: 'Poppins', sans-serif; background: #0f0c29; color: white; display: flex; justify-content: center; padding: 20px; }
-    .card { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); padding: 30px; border-radius: 15px; border: 1px solid #00d2ff; width: 100%; max-width: 400px; }
-    h2 { text-align: center; color: #00d2ff; font-family: sans-serif; }
-    input, textarea, select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #302b63; background: #24243e; color: white; box-sizing: border-box; }
-    button { width: 100%; padding: 15px; background: linear-gradient(45deg, #00d2ff, #9d50bb); border: none; color: white; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 10px; }
-    #status { text-align: center; color: #00ff88; margin-top: 15px; font-size: 14px; }
+    body { font-family: 'Poppins', sans-serif; background: #0b0e14; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+    .card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); padding: 40px; border-radius: 24px; border: 1px solid rgba(0, 210, 255, 0.3); width: 100%; max-width: 450px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+    h2 { font-family: 'Orbitron'; text-align: center; color: #00d2ff; letter-spacing: 2px; }
+    label { font-size: 11px; color: #00d2ff; font-weight: bold; display: block; margin-top: 15px; }
+    input, textarea, select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); color: #fff; box-sizing: border-box; }
+    button { width: 100%; padding: 15px; background: linear-gradient(90deg, #00d2ff, #9d50bb); border: none; color: white; font-weight: bold; border-radius: 12px; cursor: pointer; margin-top: 20px; transition: 0.3s; }
+    button:hover { transform: scale(1.02); box-shadow: 0 0 20px rgba(0, 210, 255, 0.5); }
+    #status { text-align: center; margin-top: 15px; color: #00ffcc; font-size: 13px; }
   </style>
 </head>
 <body>
   <div class="card">
-    <h2>MOD ADMIN PANEL</h2>
-    <input type="text" id="nama" placeholder="Nama Mod">
-    <textarea id="desc" rows="2" placeholder="Deskripsi (Opsional)"></textarea>
+    <h2>ADMIN PANEL</h2>
+    <label>NAMA MOD</label><input type="text" id="nama">
+    <label>DESKRIPSI</label><textarea id="desc" rows="2"></textarea>
+    <label>PLATFORM</label>
     <select id="platform">
-      <option value="PC">PC</option>
-      <option value="Android">Android</option>
-      <option value="PC & Android">PC & Android</option>
+      <option value="PC">🖥️ PC</option>
+      <option value="Android">📱 Android</option>
+      <option value="Minecraft">🧱 Minecraft</option>
     </select>
-    <input type="text" id="preview" placeholder="Link Gambar / YouTube">
-    <input type="file" id="file">
-    <button onclick="upload()">UPLOAD MOD</button>
+    <label>PREVIEW (YT/IMAGE LINK)</label><input type="text" id="preview">
+    <label>FILE MOD</label><input type="file" id="file">
+    <button onclick="proses()">🚀 PUBLISH MOD</button>
     <div id="status"></div>
   </div>
-
   <script>
-    function upload() {
-      const fileInput = document.getElementById('file').files[0];
-      if(!fileInput) return alert("Pilih file dulu!");
-      const reader = new FileReader();
-      reader.onload = function(e) {
+    function proses() {
+      const f = document.getElementById('file').files[0];
+      if(!f) return alert("Pilih file!");
+      const r = new FileReader();
+      r.onload = function(e) {
         const obj = {
           namaMod: document.getElementById('nama').value,
           deskripsi: document.getElementById('desc').value || "-",
           platform: document.getElementById('platform').value,
           linkPreview: document.getElementById('preview').value,
-          fileMod: { contents: Array.from(new Uint8Array(e.target.result)), name: fileInput.name, mimeType: fileInput.type }
+          fileMod: { contents: Array.from(new Uint8Array(e.target.result)), name: f.name, mimeType: f.mimeType }
         };
-        document.getElementById('status').innerText = "Proses Upload... Sabar ya.";
-        google.script.run.withSuccessHandler(res => {
-          document.getElementById('status').innerText = res;
-          document.querySelectorAll('input, textarea').forEach(i => i.value = "");
+        document.getElementById('status').innerText = "Uploading... ⏳";
+        google.script.run.withSuccessHandler(msg => {
+          document.getElementById('status').innerText = msg;
+          document.querySelectorAll('input, textarea').forEach(el => el.value = "");
         }).uploadFile(obj);
       };
-      reader.readAsArrayBuffer(fileInput);
+      r.readAsArrayBuffer(f);
     }
   </script>
 </body>
