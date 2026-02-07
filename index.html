@@ -64,19 +64,32 @@
                 const prev = col[3].trim().replace(/"/g, "");
                 const link = col[4].trim().replace(/"/g, "");
 
-                let media = '';
-                if(prev.includes('youtube.com') || prev.includes('youtu.be')) {
-                    let videoId = "";
-                    if(prev.includes('v=')) {
-                        videoId = prev.split('v=')[1].split('&')[0];
-                    } else {
-                        videoId = prev.split('/').pop();
-                    }
-                    // PERBAIKAN: Gunakan /embed/ dan variabel ${videoId} yang benar
-                    media = `<iframe src="https://www.youtube.com{videoId}" allowfullscreen></iframe>`;
-                } else {
-                    media = `<img src="${prev}" onerror="this.src='https://placehold.co'">`;
-                }
+                // BAGIAN PERBAIKAN LOGIKA YOUTUBE
+let media = '';
+if (prev.includes('youtube.com') || prev.includes('youtu.be')) {
+    let videoId = "";
+    try {
+        if (prev.includes('v=')) {
+            // Mengambil ID dari format ://youtube.com
+            videoId = prev.split('v=')[1].split('&')[0];
+        } else {
+            // Mengambil ID dari format youtu.be/XXXXX
+            videoId = prev.split('/').pop().split('?')[0];
+        }
+    } catch (err) {
+        videoId = "";
+    }
+    
+    // PERHATIKAN: Gunakan format /embed/ dan tanda ${videoId} yang benar
+    if (videoId) {
+        media = `<iframe src="https://www.youtube.com{videoId}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+    } else {
+        media = `<img src="https://placehold.co">`;
+    }
+} else {
+    media = `<img src="${prev}" onerror="this.src='https://placehold.co'">`;
+}
+
 
                 grid.innerHTML += `
                 <div class="card">
