@@ -64,13 +64,24 @@
                 const prev = col[3].replace(/"/g, "");
                 const link = col[4].replace(/"/g, "");
 
+                // Ganti bagian penentuan 'media' dengan kode di bawah ini:
                 let media = '';
-                if(prev.includes('youtube') || prev.includes('youtu.be')) {
-                    let vid = prev.includes('v=') ? prev.split('v=')[1].split('&')[0] : prev.split('/').pop();
-                    media = `<iframe src="https://www.youtube.com{vid}"></iframe>`;
+                let previewLink = col[3].trim().replace(/"/g, ""); // Kolom ke-4 (Link Preview)
+
+                if (previewLink.includes('youtube.com') || previewLink.includes('youtu.be')) {
+                    let videoId = "";
+                    if (previewLink.includes('v=')) {
+                        // Mengambil ID setelah 'v=' dan sebelum tanda '&' jika ada
+                        videoId = previewLink.split('v=')[1].split('&')[0];
+                    } else {
+                        // Mengambil ID dari link singkat youtu.be
+                        videoId = previewLink.split('/').pop();
+                    }
+                    media = `<iframe src="https://www.youtube.com{videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
                 } else {
-                    media = `<img src="${prev}" onerror="this.src='https://placehold.co'">`;
+                    media = `<img src="${previewLink}" onerror="this.src='https://placehold.co'">`;
                 }
+
 
                 grid.innerHTML += `
                 <div class="card">
