@@ -46,53 +46,48 @@
     const csvURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQDRJ17ZZZahiwECXbmCf5xG6VgsbUZrIoI7gsRuFijxwe_d0iaytC3dT57O9qkR3lLP7xgmJfMA8S9/pub?gid=0&single=true&output=csv';
 
     async function loadMods() {
-        const grid = document.getElementById('modGrid');
-        try {
-            const r = await fetch(csvURL);
-            const d = await r.text();
-            const rows = d.split('\n').slice(1);
-            grid.innerHTML = '';
+    const grid = document.getElementById('modGrid');
+    try {
+        const r = await fetch(csvURL);
+        const d = await r.text();
+        const rows = d.split('\n').slice(1);
+        grid.innerHTML = '';
 
-            rows.forEach(row => {
-                const col = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                if(col.length < 5) return;
+        rows.forEach(row => {
+            const col = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+            if(col.length < 5) return;
 
-                const nama = col[0].replace(/"/g, "");
-                const desc = col[1].replace(/"/g, "");
-                const plat = col[2].replace(/"/g, "");
-                const prev = col[3].trim().replace(/"/g, "");
-                const link = col[4].trim().replace(/"/g, "");
+            const nama = col[0].replace(/"/g, "");
+            const desc = col[1].replace(/"/g, "");
+            const plat = col[2].replace(/"/g, "");
+            const prev = col[3].trim().replace(/"/g, "");
+            const link = col[4].trim().replace(/"/g, "");
 
-                let media = '';
-                // PERBAIKAN LOGIKA YOUTUBE
-                if(prev.includes('youtube.com') || prev.includes('youtu.be')) {
-                    let videoId = "";
-                    if(prev.includes('v=')) {
-                        videoId = prev.split('v=')[1].split('&')[0];
-                    } else {
-                        videoId = prev.split('/').pop();
-                    }
-                    media = `<iframe src="https://www.youtube.com{videoId}" allowfullscreen></iframe>`;
-                } else {
-                    media = `<img src="${prev}" onerror="this.src='https://placehold.co'">`;
-                }
+            let media = '';
+            // Perbaikan pengambilan ID YouTube yang lebih akurat
+            if(prev.includes('youtube.com') || prev.includes('youtu.be')) {
+                let videoId = prev.includes('v=') ? prev.split('v=')[1].split('&')[0] : prev.split('/').pop();
+                media = `<iframe src="https://www.youtube.com{videoId}" allowfullscreen></iframe>`;
+            } else {
+                media = `<img src="${prev}" onerror="this.src='https://placehold.co'">`;
+            }
 
-                grid.innerHTML += `
-                <div class="card">
-                    <div class="preview">${media}</div>
-                    <div class="content">
-                        <span class="platform">${plat}</span>
-                        <h3 style="margin:10px 0 5px;">${nama}</h3>
-                        <p style="font-size:13px; color:#aaa; height:40px; overflow:hidden;">${desc}</p>
-                        <a href="${link}" class="btn-dl" target="_blank">DOWNLOAD</a>
-                    </div>
-                </div>`;
-            });
-            if(grid.innerHTML === "") grid.innerHTML = "Belum ada mod.";
-        } catch(e) {
-            grid.innerHTML = "Gagal memuat data. Periksa link CSV Anda.";
-        }
+            grid.innerHTML += `
+            <div class="card">
+                <div class="preview">${media}</div>
+                <div class="content">
+                    <span class="platform">${plat}</span>
+                    <h3 style="margin:10px 0 5px;">${nama}</h3>
+                    <p style="font-size:13px; color:#aaa; height:40px; overflow:hidden;">${desc}</p>
+                    <a href="${link}" class="btn-dl" target="_blank">DOWNLOAD</a>
+                </div>
+            </div>`;
+        });
+    } catch(e) {
+        grid.innerHTML = "Gagal memuat data. Pastikan link Sheets sudah di-'Publish to Web' sebagai CSV.";
     }
+}
+
     loadMods();
 </script>
 </body>
