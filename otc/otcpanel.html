@@ -4,30 +4,26 @@
   <link href="https://fonts.googleapis.com" rel="stylesheet">
   <style>
     body { font-family: 'Poppins', sans-serif; background: #0b0e14; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-    .card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); padding: 40px; border-radius: 24px; border: 1px solid rgba(0, 210, 255, 0.3); width: 100%; max-width: 450px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-    h2 { font-family: 'Orbitron'; text-align: center; color: #00d2ff; letter-spacing: 2px; }
-    label { font-size: 11px; color: #00d2ff; font-weight: bold; display: block; margin-top: 15px; }
-    input, textarea, select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); color: #fff; box-sizing: border-box; }
-    button { width: 100%; padding: 15px; background: linear-gradient(90deg, #00d2ff, #9d50bb); border: none; color: white; font-weight: bold; border-radius: 12px; cursor: pointer; margin-top: 20px; transition: 0.3s; }
-    button:hover { transform: scale(1.02); box-shadow: 0 0 20px rgba(0, 210, 255, 0.5); }
-    #status { text-align: center; margin-top: 15px; color: #00ffcc; font-size: 13px; }
+    .card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); padding: 40px; border-radius: 20px; border: 1px solid rgba(0, 210, 255, 0.3); width: 100%; max-width: 400px; }
+    input, textarea, select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #333; background: #161b22; color: #fff; box-sizing: border-box; }
+    button { width: 100%; padding: 15px; background: #00d2ff; border: none; color: #000; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.3s; }
+    button:hover { background: #0099ff; transform: scale(1.02); }
   </style>
 </head>
 <body>
   <div class="card">
-    <h2>ADMIN PANEL</h2>
-    <label>NAMA MOD</label><input type="text" id="nama">
-    <label>DESKRIPSI</label><textarea id="desc" rows="2"></textarea>
-    <label>PLATFORM</label>
+    <h2 style="text-align:center; color:#00d2ff">UPLOAD CENTER</h2>
+    <input type="text" id="nama" placeholder="Nama Mod">
+    <textarea id="desc" placeholder="Deskripsi"></textarea>
     <select id="platform">
       <option value="PC">🖥️ PC</option>
       <option value="Android">📱 Android</option>
-      <option value="PC-Android">PC & Android</option>
+      <option value="PC & Android">🧱PC & Android</option>
     </select>
-    <label>PREVIEW (YT/IMAGE LINK)</label><input type="text" id="preview">
-    <label>FILE MOD</label><input type="file" id="file">
-    <button onclick="proses()">🚀 PUBLISH MOD</button>
-    <div id="status"></div>
+    <input type="text" id="preview" placeholder="Link YouTube / Gambar">
+    <input type="file" id="file">
+    <button onclick="proses()">PUBLISH SEKARANG</button>
+    <p id="status" style="text-align:center; color:#00ffcc"></p>
   </div>
   <script>
     function proses() {
@@ -40,9 +36,9 @@
           deskripsi: document.getElementById('desc').value || "-",
           platform: document.getElementById('platform').value,
           linkPreview: document.getElementById('preview').value,
-          fileMod: { contents: Array.from(new Uint8Array(e.target.result)), name: f.name, mimeType: f.mimeType }
+          fileMod: { contents: Array.from(new Uint8Array(e.target.result)), name: f.name, mimeType: f.type }
         };
-        document.getElementById('status').innerText = "Uploading... ⏳";
+        document.getElementById('status').innerText = "Sedang Upload...";
         google.script.run.withSuccessHandler(msg => {
           document.getElementById('status').innerText = msg;
           document.querySelectorAll('input, textarea').forEach(el => el.value = "");
