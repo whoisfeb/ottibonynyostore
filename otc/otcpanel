@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { font-family: 'Poppins', sans-serif; background: #0f0c29; color: white; display: flex; justify-content: center; padding: 20px; }
+    .card { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); padding: 30px; border-radius: 15px; border: 1px solid #00d2ff; width: 100%; max-width: 400px; }
+    h2 { text-align: center; color: #00d2ff; font-family: sans-serif; }
+    input, textarea, select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #302b63; background: #24243e; color: white; box-sizing: border-box; }
+    button { width: 100%; padding: 15px; background: linear-gradient(45deg, #00d2ff, #9d50bb); border: none; color: white; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 10px; }
+    #status { text-align: center; color: #00ff88; margin-top: 15px; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>MOD ADMIN PANEL</h2>
+    <input type="text" id="nama" placeholder="Nama Mod">
+    <textarea id="desc" rows="2" placeholder="Deskripsi (Opsional)"></textarea>
+    <select id="platform">
+      <option value="PC">PC</option>
+      <option value="Android">Android</option>
+      <option value="PC & Android">PC & Android</option>
+    </select>
+    <input type="text" id="preview" placeholder="Link Gambar / YouTube">
+    <input type="file" id="file">
+    <button onclick="upload()">UPLOAD MOD</button>
+    <div id="status"></div>
+  </div>
+
+  <script>
+    function upload() {
+      const fileInput = document.getElementById('file').files[0];
+      if(!fileInput) return alert("Pilih file dulu!");
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const obj = {
+          namaMod: document.getElementById('nama').value,
+          deskripsi: document.getElementById('desc').value || "-",
+          platform: document.getElementById('platform').value,
+          linkPreview: document.getElementById('preview').value,
+          fileMod: { contents: Array.from(new Uint8Array(e.target.result)), name: fileInput.name, mimeType: fileInput.type }
+        };
+        document.getElementById('status').innerText = "Proses Upload... Sabar ya.";
+        google.script.run.withSuccessHandler(res => {
+          document.getElementById('status').innerText = res;
+          document.querySelectorAll('input, textarea').forEach(i => i.value = "");
+        }).uploadFile(obj);
+      };
+      reader.readAsArrayBuffer(fileInput);
+    }
+  </script>
+</body>
+</html>
