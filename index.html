@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OTC MOD HUB</title>
-    <!-- PERBAIKAN: Link lengkap agar tidak diblokir CORB -->
+    <!-- PERBAIKAN: Link font & ikon yang benar agar tidak kena blokir CORB -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com">
     <style>
@@ -13,7 +13,7 @@
         header { text-align: center; padding: 60px 20px; border-bottom: 2px solid var(--accent); background: #000; }
         h1 { font-family: 'Orbitron'; font-size: 3rem; color: var(--accent); margin: 0; text-transform: uppercase; }
         .social-container { display: flex; gap: 15px; justify-content: center; margin-top: 20px; }
-        .btn-social { padding: 10px 20px; border-radius: 50px; text-decoration: none; color: #fff; border: 1px solid rgba(255,255,255,0.2); transition: 0.3s; font-size: 14px; }
+        .btn-social { padding: 10px 20px; border-radius: 50px; text-decoration: none; color: #fff; border: 1px solid rgba(255,255,255,0.2); transition: 0.3s; font-size: 14px; display: flex; align-items: center; gap: 8px; }
         .btn-yt:hover { background: #ff0000; border-color: #ff0000; box-shadow: 0 0 15px #ff0000; }
         .btn-dc:hover { background: #7289da; border-color: #7289da; box-shadow: 0 0 15px #7289da; }
         .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
@@ -43,12 +43,14 @@
 </div>
 
 <script>
-    const csvURL = 'https://docs.google.comhttps://docs.google.com/spreadsheets/d/e/2PACX-1vQDRJ17ZZZahiwECXbmCf5xG6VgsbUZrIoI7gsRuFijxwe_d0iaytC3dT57O9qkR3lLP7xgmJfMA8S9/pub?gid=0&single=true&output=csv';
+    // Link CSV Anda sudah benar, pastikan Spreadsheet-nya masih di-publish ke Web
+    const csvURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQDRJ17ZZZahiwECXbmCf5xG6VgsbUZrIoI7gsRuFijxwe_d0iaytC3dT57O9qkR3lLP7xgmJfMA8S9/pub?gid=0&single=true&output=csv';
 
     async function loadMods() {
         const grid = document.getElementById('modGrid');
         try {
             const r = await fetch(csvURL);
+            if (!r.ok) throw new Error('Gagal fetch');
             const d = await r.text();
             const rows = d.split('\n').slice(1);
             grid.innerHTML = '';
@@ -64,20 +66,20 @@
                 const link = col[4].replace(/"/g, "").trim();
 
                 let media = '';
-                // PERBAIKAN: Logika Video ID YouTube & Format Embed yang Benar
-                if(prev.includes('youtube.com') || prev.includes('youtu.be')) {
+                // PERBAIKAN: Logika penentuan Video ID dan format link Embed
+                if (prev.includes('youtube.com') || prev.includes('youtu.be')) {
                     let videoId = "";
-                    if(prev.includes('v=')) {
+                    if (prev.includes('v=')) {
                         videoId = prev.split('v=')[1].split('&')[0];
                     } else {
                         videoId = prev.split('/').pop().split('?')[0];
                     }
-                    // MENGGUNAKAN backtick (`) dan ${videoId} agar variabel terbaca
                     media = `<iframe src="https://www.youtube.com{videoId}" allowfullscreen></iframe>`;
                 } else {
                     media = `<img src="${prev}" onerror="this.src='https://placehold.co'">`;
                 }
 
+                // Menggunakan backtick ( ` ) untuk membungkus HTML
                 grid.innerHTML += `
                 <div class="card">
                     <div class="preview">${media}</div>
@@ -89,8 +91,10 @@
                     </div>
                 </div>`;
             });
+            if(grid.innerHTML === "") grid.innerHTML = "Database kosong.";
         } catch(e) {
-            grid.innerHTML = "Gagal memuat data.";
+            grid.innerHTML = "Gagal memuat data. Pastikan link Google Sheets sudah di-'Publish to the web'.";
+            console.error(e);
         }
     }
     loadMods();
