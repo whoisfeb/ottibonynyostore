@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTTIBONYNYO COMMUNITY</title>
+    <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <style>
+        :root { --primary: #00d2ff; --bg: #0f0c29; }
+        body { background: var(--bg); color: white; font-family: 'Poppins', sans-serif; margin: 0; }
+        header { text-align: center; padding: 50px 20px; background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com'); background-size: cover; }
+        h1 { font-family: 'Orbitron'; font-size: 3rem; color: var(--primary); margin: 0; }
+        .container { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
+        .card { background: rgba(255,255,255,0.05); border-radius: 15px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); transition: 0.3s; }
+        .card:hover { transform: translateY(-5px); border-color: var(--primary); }
+        .preview-box { width: 100%; height: 200px; background: #000; overflow: hidden; }
+        .preview-box img, .preview-box iframe { width: 100%; height: 100%; object-fit: cover; border: none; }
+        .info { padding: 20px; }
+        .platform-tag { background: var(--primary); color: black; padding: 3px 10px; border-radius: 5px; font-size: 12px; font-weight: bold; }
+        .btn-dl { display: block; background: var(--primary); color: black; text-align: center; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: bold; margin-top: 15px; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>MOD CENTER</h1>
+    <p>Download Mod Gratis untuk PC & Android</p>
+    <div style="margin-top: 20px;">
+        <a href="URL_YOUTUBE" style="color:red; margin-right: 15px;">YouTube</a>
+        <a href="URL_DISCORD" style="color:#7289da;">Discord</a>
+    </div>
+</header>
+
+<div class="container">
+    <div class="grid" id="modGrid">Loading mod...</div>
+</div>
+
+<script>
+    // MASUKKAN LINK CSV GOOGLE SHEETS KAMU DI SINI
+    const csvURL = 'https://docs.google.com';
+
+    async function loadMods() {
+        try {
+            const resp = await fetch(csvURL);
+            const data = await resp.text();
+            const rows = data.split('\n').slice(1);
+            const grid = document.getElementById('modGrid');
+            grid.innerHTML = '';
+
+            rows.forEach(row => {
+                const col = row.split(',');
+                if(col.length < 5) return;
+
+                let previewHTML = '';
+                if(col[3].includes('youtube') || col[3].includes('youtu.be')) {
+                    let id = col[3].includes('v=') ? col[3].split('v=')[1].split('&')[0] : col[3].split('/').pop();
+                    previewHTML = `<iframe src="https://www.youtube.com{id}"></iframe>`;
+                } else {
+                    previewHTML = `<img src="${col[3]}" alt="Preview">`;
+                }
+
+                grid.innerHTML += `
+                    <div class="card">
+                        <div class="preview-box">${previewHTML}</div>
+                        <div class="info">
+                            <span class="platform-tag">${col[2]}</span>
+                            <h3 style="margin: 10px 0 5px;">${col[0]}</h3>
+                            <p style="font-size: 14px; color: #ccc;">${col[1]}</p>
+                            <a href="${col[4]}" class="btn-dl">DOWNLOAD</a>
+                        </div>
+                    </div>`;
+            });
+        } catch(e) { document.getElementById('modGrid').innerText = 'Gagal memuat data.'; }
+    }
+    loadMods();
+</script>
+</body>
+</html>
