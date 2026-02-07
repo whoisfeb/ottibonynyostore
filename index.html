@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OTTIBONYNYO - COMMMUNITY</title>
+    <title>OTC MOD HUB</title>
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com">
     <style>
@@ -19,7 +19,7 @@
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; }
         .card { background: var(--card); border-radius: 15px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; }
         .card:hover { transform: translateY(-10px); border-color: var(--accent); }
-        .preview { width: 100%; height: 180px; background: #000; }
+        .preview { width: 100%; height: 200px; background: #000; }
         .preview img, .preview iframe { width: 100%; height: 100%; border: none; object-fit: cover; }
         .content { padding: 20px; }
         .platform { background: var(--accent); color: #000; padding: 2px 10px; border-radius: 50px; font-size: 11px; font-weight: bold; }
@@ -30,10 +30,10 @@
 <body>
 
 <header>
-    <h1>OTTIBONYYNO MOD HUB</h1>
+    <h1>OTC MOD HUB</h1>
     <div class="social-container">
-        <a href="https://youtube.com" class="btn-social btn-yt"><i class="fab fa-youtube"></i> YouTube</a>
-        <a href="https://discord.gg" class="btn-social btn-dc"><i class="fab fa-discord"></i> Discord</a>
+        <a href="https://youtube.com" class="btn-social btn-yt" target="_blank"><i class="fab fa-youtube"></i> YouTube</a>
+        <a href="https://discord.gg" class="btn-social btn-dc" target="_blank"><i class="fab fa-discord"></i> Discord</a>
     </div>
 </header>
 
@@ -43,7 +43,7 @@
 
 <script>
     // MASUKKAN LINK CSV HASIL "PUBLISH TO WEB" DI SINI
-    const csvURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQDRJ17ZZZahiwECXbmCf5xG6VgsbUZrIoI7gsRuFijxwe_d0iaytC3dT57O9qkR3lLP7xgmJfMA8S9/pub?gid=0&single=true&output=csv';
+    const csvURL = 'https://docs.google.com';
 
     async function loadMods() {
         const grid = document.getElementById('modGrid');
@@ -54,34 +54,28 @@
             grid.innerHTML = '';
 
             rows.forEach(row => {
-                // Regex agar koma dalam deskripsi tidak merusak tampilan
                 const col = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                 if(col.length < 5) return;
 
                 const nama = col[0].replace(/"/g, "");
                 const desc = col[1].replace(/"/g, "");
                 const plat = col[2].replace(/"/g, "");
-                const prev = col[3].replace(/"/g, "");
-                const link = col[4].replace(/"/g, "");
+                const prev = col[3].trim().replace(/"/g, "");
+                const link = col[4].trim().replace(/"/g, "");
 
-                // Ganti bagian penentuan 'media' dengan kode di bawah ini:
                 let media = '';
-                let previewLink = col[3].trim().replace(/"/g, ""); // Kolom ke-4 (Link Preview)
-
-                if (previewLink.includes('youtube.com') || previewLink.includes('youtu.be')) {
+                // PERBAIKAN LOGIKA YOUTUBE
+                if(prev.includes('youtube.com') || prev.includes('youtu.be')) {
                     let videoId = "";
-                    if (previewLink.includes('v=')) {
-                        // Mengambil ID setelah 'v=' dan sebelum tanda '&' jika ada
-                        videoId = previewLink.split('v=')[1].split('&')[0];
+                    if(prev.includes('v=')) {
+                        videoId = prev.split('v=')[1].split('&')[0];
                     } else {
-                        // Mengambil ID dari link singkat youtu.be
-                        videoId = previewLink.split('/').pop();
+                        videoId = prev.split('/').pop();
                     }
-                    media = `<iframe src="https://www.youtube.com{videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+                    media = `<iframe src="https://www.youtube.com{videoId}" allowfullscreen></iframe>`;
                 } else {
-                    media = `<img src="${previewLink}" onerror="this.src='https://placehold.co'">`;
+                    media = `<img src="${prev}" onerror="this.src='https://placehold.co'">`;
                 }
-
 
                 grid.innerHTML += `
                 <div class="card">
@@ -96,7 +90,7 @@
             });
             if(grid.innerHTML === "") grid.innerHTML = "Belum ada mod.";
         } catch(e) {
-            grid.innerHTML = "Gagal memuat data. Cek link CSV di script.";
+            grid.innerHTML = "Gagal memuat data. Periksa link CSV Anda.";
         }
     }
     loadMods();
